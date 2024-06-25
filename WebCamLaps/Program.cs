@@ -84,7 +84,10 @@ public class Program
 
     private static async Task ProcessImage()
     {
-        using (HttpClient client = new HttpClient())
+        HttpClientHandler clientHandler = new HttpClientHandler();
+        clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
+
+        using (HttpClient client = new HttpClient(clientHandler))
         {
             _logger.LogInformation("Downloading image...");
             var imageBytes = await client.GetByteArrayAsync(_config.ImageUrl); // Use ImageUrl from _config
